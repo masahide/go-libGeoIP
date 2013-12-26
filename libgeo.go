@@ -156,10 +156,22 @@ func Load(filename string) (gi *GeoIP, err error) {
 	}
 
 	// Copy the db into memory
-	gi = new(GeoIP)
-	gi.data = make([]byte, dbInfo.Size())
+	data := make([]byte, dbInfo.Size())
 	dbFile.Read(gi.data)
 	dbFile.Close()
+
+	gi, err = Initialize(&data)
+	if err != nil {
+		return
+	}
+
+	return gi, err
+}
+
+func Initialize(data *[]byte) (gi *GeoIP, err error) {
+	// Copy the db into memory
+	gi = new(GeoIP)
+	gi.data = *data
 
 	// Check the database type
 	gi.dbType = dbCountryEdition           // Default the database to country edition
