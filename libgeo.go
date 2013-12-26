@@ -157,10 +157,10 @@ func Load(filename string) (gi *GeoIP, err error) {
 
 	// Copy the db into memory
 	data := make([]byte, dbInfo.Size())
-	dbFile.Read(gi.data)
+	dbFile.Read(data)
 	dbFile.Close()
 
-	gi, err = Initialize(&data)
+	gi, err = Initialize(data)
 	if err != nil {
 		return
 	}
@@ -168,10 +168,10 @@ func Load(filename string) (gi *GeoIP, err error) {
 	return gi, err
 }
 
-func Initialize(data *[]byte) (gi *GeoIP, err error) {
+func Initialize(data []byte) (gi *GeoIP, err error) {
 	// Copy the db into memory
 	gi = new(GeoIP)
-	gi.data = *data
+	gi.data = data
 
 	// Check the database type
 	gi.dbType = dbCountryEdition           // Default the database to country edition
